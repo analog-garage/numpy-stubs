@@ -1,0 +1,46 @@
+{% set data = load_setup_py_data() %}
+
+package:
+  name: numpy-stubs
+  version: {{ data.get('version') }}
+
+source:
+  git_url: https://github.com/numpy/numpy-stubs.git
+
+build:
+  noarch: python
+  script: python setup.py install --single-version-externally-managed --record=record.txt
+
+requirements:
+  build:
+    - python
+    - setuptools
+
+  run:
+    - python
+    - numpy >=1.14.0
+    - typing_extensions >=3.7.4 # [py<38]
+
+test:
+  source_files:
+    - tests
+
+  requires:
+    - black >=18.9b0
+    - flake8 >=3.7.9
+    - flake8-pyi >=18.3.1
+    - pytest >=4.0.0
+    - mypy >=0.770
+
+  command:
+    - pytest -vs
+
+about:
+  home: https://github.com/numpy/numpy-stubs
+  license: {{ data.get('license') }}
+  license_file: LICENSE
+  summary: {{ data.get('description') }}
+
+extra:
+  maintainer: {{ data.get('maintainer') }}
+  maintainer_email: {{ data.get('maintainer_email') }}
